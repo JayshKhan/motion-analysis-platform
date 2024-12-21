@@ -1,31 +1,81 @@
 import pygame
 
 class MainMenuScreen:
+    BUTTON_COLOR = (0, 128, 255)
+    BUTTON_HOVER_COLOR = (0, 150, 255)
+    TEXT_COLOR = (255, 255, 255)
+    TITLE_COLOR = (0, 0, 0)
+
     @staticmethod
     def handle_input(app, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            # Example: Check for clicks on "Environment Editor" button
-            if 100 < mouse_pos[0] < 300 and 100 < mouse_pos[1] < 150:
-                app.current_screen = "environment_editor"
-            elif 100 < mouse_pos[0] < 300 and 200 < mouse_pos[1] < 250:
+            if app.algorithm_button_rect.collidepoint(mouse_pos):
                 app.current_screen = "algorithm_selection"
+            elif app.environment_button_rect.collidepoint(mouse_pos):
+                app.current_screen = "environment_editor"
+            elif app.sensor_button_rect.collidepoint(mouse_pos):
+                app.current_screen = "sensor_import"
 
     @staticmethod
     def update(app):
-        pass
+        mouse_pos = pygame.mouse.get_pos()
+        app.algorithm_button_hovered = app.algorithm_button_rect.collidepoint(mouse_pos)
+        app.environment_button_hovered = app.environment_button_rect.collidepoint(mouse_pos)
+        app.sensor_button_hovered = app.sensor_button_rect.collidepoint(mouse_pos)
 
     @staticmethod
     def draw(app):
-        font = pygame.font.Font(None, 36)
-        text = font.render("Main Menu", True, (0, 0, 0))
-        app.screen.blit(text, (app.screen_width // 2 - text.get_width() // 2, 50))
+        app.screen.fill((240, 240, 240))  # Light gray background
+        font_title = pygame.font.Font(None, 64)
+        font_button = pygame.font.Font(None, 36)
 
-        # Example buttons (very basic)
-        pygame.draw.rect(app.screen, (0, 128, 255), (100, 100, 200, 50))
-        text_editor = font.render("Environment Editor", True, (255, 255, 255))
-        app.screen.blit(text_editor, (110, 110))
+        # Title
+        title_text = font_title.render("Motion Analysis Platform", True, MainMenuScreen.TITLE_COLOR)
+        title_rect = title_text.get_rect(center=(app.screen_width // 2, 100))
+        app.screen.blit(title_text, title_rect)
 
-        pygame.draw.rect(app.screen, (0, 128, 255), (100, 200, 200, 50))
-        text_algo = font.render("Select Algorithm", True, (255, 255, 255))
-        app.screen.blit(text_algo, (110, 210))
+        # Buttons
+        button_width = 250
+        button_height = 50
+        button_spacing = 20
+        start_y = 200
+
+        # Environment Editor Button
+        app.environment_button_rect = pygame.Rect(
+            app.screen_width // 2 - button_width // 2,
+            start_y,
+            button_width,
+            button_height,
+        )
+        environment_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.environment_button_hovered else MainMenuScreen.BUTTON_COLOR
+        pygame.draw.rect(app.screen, environment_button_color, app.environment_button_rect)
+        environment_text = font_button.render("Environment Editor", True, MainMenuScreen.TEXT_COLOR)
+        environment_text_rect = environment_text.get_rect(center=app.environment_button_rect.center)
+        app.screen.blit(environment_text, environment_text_rect)
+
+        # Algorithm Selection Button
+        app.algorithm_button_rect = pygame.Rect(
+            app.screen_width // 2 - button_width // 2,
+            start_y + button_height + button_spacing,
+            button_width,
+            button_height,
+        )
+        algorithm_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.algorithm_button_hovered else MainMenuScreen.BUTTON_COLOR
+        pygame.draw.rect(app.screen, algorithm_button_color, app.algorithm_button_rect)
+        algorithm_text = font_button.render("Select Algorithm", True, MainMenuScreen.TEXT_COLOR)
+        algorithm_text_rect = algorithm_text.get_rect(center=app.algorithm_button_rect.center)
+        app.screen.blit(algorithm_text, algorithm_text_rect)
+
+        # Sensor Import Button
+        app.sensor_button_rect = pygame.Rect(
+            app.screen_width // 2 - button_width // 2,
+            start_y + 2 * (button_height + button_spacing),
+            button_width,
+            button_height,
+        )
+        sensor_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.sensor_button_hovered else MainMenuScreen.BUTTON_COLOR
+        pygame.draw.rect(app.screen, sensor_button_color, app.sensor_button_rect)
+        sensor_text = font_button.render("Import Sensor Model", True, MainMenuScreen.TEXT_COLOR)
+        sensor_text_rect = sensor_text.get_rect(center=app.sensor_button_rect.center)
+        app.screen.blit(sensor_text, sensor_text_rect)
