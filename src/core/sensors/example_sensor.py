@@ -1,7 +1,7 @@
 from src.core.sensors.sensor_model import SensorModel
 
 class RangeSensor(SensorModel):
-    def __init__(self, range_limit):
+    def __init__(self, range_limit=10):
         self.range_limit = range_limit
 
     def sense(self, environment, agent_position):

@@ -1,5 +1,5 @@
 import pygame
-from src.core import algorithms  # Import the algorithms module
+from src.core import algorithms
 import inspect
 
 class AlgorithmSelectionScreen:
@@ -9,21 +9,19 @@ class AlgorithmSelectionScreen:
 
     def __init__(self):
         self.algorithm_buttons = []
-        self.selected_algorithm_name = None
+        self.hovered_button = None
 
     @staticmethod
     def handle_input(app, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 app.current_screen = "main_menu"
-            elif event.key == pygame.K_RETURN and app.algorithm_selection_screen.selected_algorithm_name:
-                # Run the selected algorithm (implementation needed in MAPApp)
-                app.run_selected_algorithm()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             for name, rect in app.algorithm_selection_screen.algorithm_buttons:
                 if rect.collidepoint(mouse_pos):
-                    app.algorithm_selection_screen.selected_algorithm_name = name
+                    app.load_algorithm(name)  # Load the selected algorithm in MAPApp
+                    app.run_selected_algorithm() # Transition to execution screen
 
     @staticmethod
     def update(app):
@@ -44,16 +42,14 @@ class AlgorithmSelectionScreen:
         button_spacing = 10
         button_width = 200
 
-        # Get list of available algorithms dynamically
-        available_algorithms = AlgorithmSelectionScreen.get_available_algorithms()
-        app.algorithm_selection_screen.algorithm_buttons = []
-
         # Title
         title_text = font.render("Select Motion Planning Algorithm", True, (0, 0, 0))
         title_rect = title_text.get_rect(center=(app.screen_width // 2, 50))
         app.screen.blit(title_text, title_rect)
 
         # Algorithm Buttons
+        available_algorithms = AlgorithmSelectionScreen.get_available_algorithms()
+        app.algorithm_selection_screen.algorithm_buttons = []
         for i, algo_name in enumerate(available_algorithms):
             button_rect = pygame.Rect(
                 app.screen_width // 2 - button_width // 2,
@@ -68,9 +64,6 @@ class AlgorithmSelectionScreen:
             pygame.draw.rect(app.screen, button_color, button_rect)
 
             text_color = AlgorithmSelectionScreen.TEXT_COLOR
-            if app.algorithm_selection_screen.selected_algorithm_name == algo_name:
-                text_color = (255, 255, 0)  # Highlight selected algorithm
-
             text = font.render(algo_name.replace("_", " ").title(), True, text_color)
             text_rect = text.get_rect(center=button_rect.center)
             app.screen.blit(text, text_rect)
@@ -79,10 +72,9 @@ class AlgorithmSelectionScreen:
         instruction_font = pygame.font.Font(None, 24)
         instructions = [
             "Press ESC to go back to Main Menu",
-            "Click to select an algorithm",
-            "Press ENTER to run the selected algorithm"
+            "Click on an algorithm to select and proceed",
         ]
-        y_offset = app.screen_height - 3 * 20 - 10
+        y_offset = app.screen_height - 2 * 20 - 10
         for line in instructions:
             text = instruction_font.render(line, True, (0, 0, 0))
             app.screen.blit(text, (10, y_offset))
@@ -90,9 +82,8 @@ class AlgorithmSelectionScreen:
 
     @staticmethod
     def get_available_algorithms():
-        # Dynamically get available algorithms from the src.core.algorithms module
         algorithms_list = []
         for name, obj in inspect.getmembers(algorithms):
-            if inspect.isclass(obj) and hasattr(obj, 'plan'):  # Check if it's a class with a 'plan' method
+            if inspect.isclass(obj) and hasattr(obj, 'plan'):
                 algorithms_list.append(name)
         return algorithms_list

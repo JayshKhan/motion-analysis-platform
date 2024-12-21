@@ -13,7 +13,6 @@ class SensorImportScreen:
     def __init__(self):
         self.import_button_rect = None
         self.import_button_hovered = False
-        self.imported_sensor_name = None
 
     @staticmethod
     def handle_input(app, event):
@@ -68,8 +67,8 @@ class SensorImportScreen:
             y_offset += 30
 
         # Display Imported Sensor Name
-        if app.imported_sensor_module:
-            sensor_name = getattr(app.imported_sensor_module, '__name__', 'Unknown Sensor')
+        if app.selected_sensor:
+            sensor_name = app.selected_sensor.__class__.__name__
             imported_text = small_font.render(f"Imported Sensor: {sensor_name}", True, (0, 150, 0))
             imported_rect = imported_text.get_rect(center=(app.screen_width // 2, 400))
             app.screen.blit(imported_text, imported_rect)
@@ -92,8 +91,6 @@ class SensorImportScreen:
             module = importlib.util.module_from_spec(spec)
             sys.modules["custom_sensor_module"] = module
             spec.loader.exec_module(module)
-            app.imported_sensor_module = module # Store the imported module in app
-            print(f"Successfully imported sensor model from: {file_path}")
+            app.load_sensor(module) # Load the sensor in MAPApp
         except Exception as e:
             print(f"Error importing sensor model: {e}")
-            # Optionally display an error message on the screen

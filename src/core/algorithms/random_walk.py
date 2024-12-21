@@ -11,7 +11,8 @@ class RandomWalkPlanner(MotionPlanner):
         path = [current]
         max_steps = 1000  # Avoid infinite loops
 
-        for _ in range(max_steps):
+        for i in range(max_steps):
+            print(f"Step {i}: {current}")
             if current == environment.goal:
                 return path
 

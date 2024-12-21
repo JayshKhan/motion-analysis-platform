@@ -10,19 +10,19 @@ class MainMenuScreen:
     def handle_input(app, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            if app.algorithm_button_rect.collidepoint(mouse_pos):
-                app.current_screen = "algorithm_selection"
-            elif app.environment_button_rect.collidepoint(mouse_pos):
+            if app.environment_button_rect.collidepoint(mouse_pos):
                 app.current_screen = "environment_editor"
             elif app.sensor_button_rect.collidepoint(mouse_pos):
                 app.current_screen = "sensor_import"
+            elif app.algorithm_button_rect.collidepoint(mouse_pos):
+                app.current_screen = "algorithm_selection"
 
     @staticmethod
     def update(app):
         mouse_pos = pygame.mouse.get_pos()
-        app.algorithm_button_hovered = app.algorithm_button_rect.collidepoint(mouse_pos)
         app.environment_button_hovered = app.environment_button_rect.collidepoint(mouse_pos)
         app.sensor_button_hovered = app.sensor_button_rect.collidepoint(mouse_pos)
+        app.algorithm_button_hovered = app.algorithm_button_rect.collidepoint(mouse_pos)
 
     @staticmethod
     def draw(app):
@@ -42,40 +42,23 @@ class MainMenuScreen:
         start_y = 200
 
         # Environment Editor Button
-        app.environment_button_rect = pygame.Rect(
-            app.screen_width // 2 - button_width // 2,
-            start_y,
-            button_width,
-            button_height,
-        )
         environment_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.environment_button_hovered else MainMenuScreen.BUTTON_COLOR
         pygame.draw.rect(app.screen, environment_button_color, app.environment_button_rect)
-        environment_text = font_button.render("Environment Editor", True, MainMenuScreen.TEXT_COLOR)
+        environment_text = font_button.render("Edit Environment", True, MainMenuScreen.TEXT_COLOR)
         environment_text_rect = environment_text.get_rect(center=app.environment_button_rect.center)
         app.screen.blit(environment_text, environment_text_rect)
 
-        # Algorithm Selection Button
-        app.algorithm_button_rect = pygame.Rect(
-            app.screen_width // 2 - button_width // 2,
-            start_y + button_height + button_spacing,
-            button_width,
-            button_height,
-        )
+        # Import Sensor Model Button
+        sensor_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.sensor_button_hovered else MainMenuScreen.BUTTON_COLOR
+        pygame.draw.rect(app.screen, sensor_button_color, app.sensor_button_rect)
+        sensor_text = font_button.render("Import Sensor Model", True, MainMenuScreen.TEXT_COLOR)
+        sensor_text_rect = sensor_text.get_rect(center=app.sensor_button_rect.center)
+        app.screen.blit(sensor_text, sensor_text_rect)
+
+        # Select Algorithm Button
         algorithm_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.algorithm_button_hovered else MainMenuScreen.BUTTON_COLOR
         pygame.draw.rect(app.screen, algorithm_button_color, app.algorithm_button_rect)
         algorithm_text = font_button.render("Select Algorithm", True, MainMenuScreen.TEXT_COLOR)
         algorithm_text_rect = algorithm_text.get_rect(center=app.algorithm_button_rect.center)
         app.screen.blit(algorithm_text, algorithm_text_rect)
 
-        # Sensor Import Button
-        app.sensor_button_rect = pygame.Rect(
-            app.screen_width // 2 - button_width // 2,
-            start_y + 2 * (button_height + button_spacing),
-            button_width,
-            button_height,
-        )
-        sensor_button_color = MainMenuScreen.BUTTON_HOVER_COLOR if app.sensor_button_hovered else MainMenuScreen.BUTTON_COLOR
-        pygame.draw.rect(app.screen, sensor_button_color, app.sensor_button_rect)
-        sensor_text = font_button.render("Import Sensor Model", True, MainMenuScreen.TEXT_COLOR)
-        sensor_text_rect = sensor_text.get_rect(center=app.sensor_button_rect.center)
-        app.screen.blit(sensor_text, sensor_text_rect)
