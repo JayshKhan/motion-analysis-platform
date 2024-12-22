@@ -9,8 +9,8 @@ class PotentialFieldPlanner(MotionPlanner):
         self.sensor = sensor
         self.attractive_gain = attractive_gain  # Gain for attractive force
         self.repulsive_gain = repulsive_gain  # Gain for repulsive force
-        self.min_repulsive_distance = min_repulsive_distance  # minimum distance to obstacle to apply force
-        self.step_size = 0.1  # how much to move in a single step
+        self.min_repulsive_distance = min_repulsive_distance  # Minimum distance to apply repulsive force
+        self.step_size = 0.1  # Step size for motion
 
     def plan(self, environment: Environment):
         if not environment.start or not environment.goal:
@@ -70,7 +70,18 @@ class PotentialFieldPlanner(MotionPlanner):
         total_repulsive_force_x = 0
         total_repulsive_force_y = 0
 
-        for obstacle in environment.obstacles:
+        if self.sensor:
+            print("Using sensor to detect obstacles")
+            # Use sensor to detect obstacles if available
+            sensor_data = self.sensor.sense(environment, current)
+            obstacles_in_range = sensor_data.get("obstacles_in_range", [])
+            print(obstacles_in_range)
+        else:
+            print("No sensor provided - using all obstacles in environment")
+            # Fallback to environment.obstacles if no sensor is provided
+            obstacles_in_range = environment.obstacles
+
+        for obstacle in obstacles_in_range:
             dx = current[0] - obstacle[0]
             dy = current[1] - obstacle[1]
             distance = self.calculate_distance(current, obstacle)
