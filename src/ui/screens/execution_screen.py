@@ -138,10 +138,6 @@ class ExecutionScreen:
             )
             app.execution_screen.reset_button_rect.draw(app.screen)
 
-            # font = pygame.font.Font(None, 24)
-            # text = font.render("Run", True, (255, 255, 255))
-            # text_rect = text.get_rect(center=app.execution_screen.run_button_rect.rect.center)
-            # app.screen.blit(text, text_rect)
 
         # Draw Sensor Range (if applicable)
         if app.selected_sensor and app.execution_screen.path:

@@ -13,36 +13,12 @@ from src.ui.assets import Button
 from src.ui.config import INFO_TEXT_COLOR, SCREENWIDTH, TEXT_COLOR
 
 
-def load_sensor_dynamically(module_name):
-    """
-    Dynamically loads a sensor class from a module.
-
-    Args:
-        module_name: The name of the module (e.g., "range_sensor").
-
-    Returns:
-        The sensor class (subclass of SensorModel) or None if not found.
-    """
-    try:
-        module = importlib.import_module(f"src.core.sensors.{module_name}")  # Assuming sensors are in this package
-        for name, obj in inspect.getmembers(module):
-            if inspect.isclass(obj) and issubclass(obj, SensorModel) and obj != SensorModel:
-                return obj  # Return the first class that is a subclass of SensorModel
-        print(f"No sensor class found in module: {module_name}")
-        return None
-    except ModuleNotFoundError:
-        print(f"Module not found: {module_name}")
-        return None
-
 class SensorImportScreen:
     def __init__(self):
         self.import_button_rect = None
         self.imported_sensor_name = None
         self.available_sensors = []  # List to store available sensor names
         self.sensor_buttons = []  # List to store sensor selection buttons
-
-
-
 
     @staticmethod
     def handle_input(app, event):
@@ -56,13 +32,13 @@ class SensorImportScreen:
                 if button.rect.collidepoint(mouse_pos):
                     button.handle_event(event)
 
-
     @staticmethod
     def update(app):
         mouse_pos = pygame.mouse.get_pos()
         if app.sensor_import_screen.import_button_rect:
             app.sensor_import_screen.import_button_rect.update(mouse_pos)
-        app.sensor_import_screen.sensor_buttons
+        for name, button in app.sensor_import_screen.sensor_buttons:
+            button.update(mouse_pos)
 
     @staticmethod
     def draw(app):
@@ -82,7 +58,7 @@ class SensorImportScreen:
         available_sensors = SensorImportScreen.load_sensor_modules()
         app.sensor_import_screen.sensor_buttons = []
         for i, path in enumerate(available_sensors):
-            module_name, module = SensorImportScreen.get_sensor_name_from_file(path)
+            module_name, module = SensorImportScreen.get_sensor_info_from_file(path)
 
             button_rect = Button(
                 app.screen_width // 2 - button_width // 2,
@@ -117,11 +93,6 @@ class SensorImportScreen:
         )
 
         app.sensor_import_screen.import_button_rect.draw(app.screen)
-        # button_color = BUTTON_HOVER_COLOR if app.sensor_import_screen.import_button_hovered else BUTTON_COLOR
-        # pygame.draw.rect(app.screen, button_color, app.sensor_import_screen.import_button_rect)
-        # import_text = font.render("Import .py File", True, TEXT_COLOR)
-        # import_text_rect = import_text.get_rect(center=app.sensor_import_screen.import_button_rect.center)
-        # app.screen.blit(import_text, import_text_rect)
 
         # Instructions
         instructions = [
@@ -167,7 +138,7 @@ class SensorImportScreen:
             print(f"Error importing sensor model: {e}")
 
     @staticmethod
-    def get_sensor_name_from_file(file_path):
+    def get_sensor_info_from_file(file_path):
         try:
             spec = importlib.util.spec_from_file_location("custom_sensor_module", file_path)
             module = importlib.util.module_from_spec(spec)
@@ -191,17 +162,8 @@ class SensorImportScreen:
         for filename in os.listdir(sensors_dir):
             if filename.endswith(
                     ".py") and filename != "__init__.py" and filename != "sensor_model.py" and filename.startswith(
-                    "__") == False:
+                "__") == False:
                 module_name = filename[:-3]
                 path = os.path.join(sensors_dir, filename)
                 available_sensors.append(path)
         return available_sensors
-
-    @staticmethod
-    def select_sensor(app, module_name):
-        """Handles sensor selection."""
-        sensor_class = load_sensor_dynamically(module_name)
-        if sensor_class:
-            app.load_sensor(sensor_class)
-            print(f"Selected sensor: {module_name}")
-            app.sensor_import_screen.imported_sensor_name = module_name
