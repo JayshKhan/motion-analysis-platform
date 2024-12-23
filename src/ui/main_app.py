@@ -1,20 +1,23 @@
 import pygame
-from src.ui.screens.main_menu import MainMenuScreen
-from src.ui.screens.environment_editor import EnvironmentEditorScreen
-from src.ui.screens.algorithm_selection import AlgorithmSelectionScreen
-from src.ui.screens.sensor_import import SensorImportScreen
-from src.ui.screens.execution_screen import ExecutionScreen  # Import the new screen
-from src.core.environment import Environment
-from src.core import algorithms
+
 from src.core import sensors
+from src.core.environment import Environment
+from src.ui.assets import Button
+from src.ui.config import SCREENWIDTH, SCREENHEIGHT, TITLE_TEXT
+from src.ui.screens.algorithm_selection import AlgorithmSelectionScreen
+from src.ui.screens.environment_editor import EnvironmentEditorScreen
+from src.ui.screens.execution_screen import ExecutionScreen  # Import the new screen
+from src.ui.screens.main_menu import MainMenuScreen
+from src.ui.screens.sensor_import import SensorImportScreen
+
 
 class MAPApp:
     def __init__(self):
         pygame.init()
-        self.screen_width = 800
-        self.screen_height = 600
+        self.screen_width = SCREENWIDTH
+        self.screen_height = SCREENHEIGHT
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        pygame.display.set_caption("Motion Analysis Platform")
+        pygame.display.set_caption(TITLE_TEXT)
         self.clock = pygame.time.Clock()
         self.current_screen = "main_menu"
         self.environment = Environment(40, 30)  # Adjusted grid size
@@ -30,19 +33,44 @@ class MAPApp:
         button_height = 50
         button_spacing = 20
         start_y = 200
-        self.environment_button_rect = pygame.Rect(self.screen_width // 2 - button_width // 2, start_y, button_width, button_height)
-        self.algorithm_button_rect = pygame.Rect(self.screen_width // 2 - button_width // 2, start_y + button_height + button_spacing, button_width, button_height)
-        self.sensor_button_rect = pygame.Rect(self.screen_width // 2 - button_width // 2, start_y + 2 * (button_height + button_spacing), button_width, button_height)
+
+        self.sensor_button_rect = Button(
+            self.screen_width // 2 - button_width // 2,
+            start_y + 2 * (button_height + button_spacing),
+            button_width,
+            button_height,
+            "Sensor Model",
+            action=lambda: setattr(self, "current_screen", "sensor_import"),
+        )
+        self.environment_button_rect = Button(
+            self.screen_width // 2 - button_width // 2,
+            start_y,
+            button_width,
+            button_height,
+            "Edit Environment",
+            action=lambda: setattr(self, "current_screen", "environment_editor"),
+        )
+        self.algorithm_button_rect = Button(
+            self.screen_width // 2 - button_width // 2,
+            start_y + button_height + button_spacing,
+            button_width,
+            button_height,
+            "Run Algorithm",
+            action=lambda: setattr(self, "current_screen", "algorithm_selection"),
+        )
 
         # Initialize screens
-        self.algorithm_selection_screen = AlgorithmSelectionScreen()
+
         self.environment_editor_screen = EnvironmentEditorScreen()
         self.sensor_import_screen = SensorImportScreen()
+        self.algorithm_selection_screen = AlgorithmSelectionScreen()
         self.execution_screen = ExecutionScreen()  # Initialize the execution screen
 
     def run(self):
         running = True
         while running:
+            # Background
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -109,7 +137,9 @@ class MAPApp:
         self.current_screen = "execution"
         self.execution_screen.reset()  # Reset execution screen state
 
+
 if __name__ == "__main__":
     import inspect
+
     app = MAPApp()
     app.run()

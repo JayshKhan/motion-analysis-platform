@@ -1,11 +1,13 @@
-import pygame
-from src.core import algorithms
 import inspect
 
+import pygame
+
+from src.core import algorithms
+from src.ui.assets import Button
+from src.ui.config import TEXT_COLOR
+
+
 class AlgorithmSelectionScreen:
-    BUTTON_COLOR = (0, 128, 255)
-    BUTTON_HOVER_COLOR = (0, 150, 255)
-    TEXT_COLOR = (255, 255, 255)
 
     def __init__(self):
         self.algorithm_buttons = []
@@ -18,17 +20,19 @@ class AlgorithmSelectionScreen:
                 app.current_screen = "main_menu"
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            for name, rect in app.algorithm_selection_screen.algorithm_buttons:
-                if rect.collidepoint(mouse_pos):
+            for name, button in app.algorithm_selection_screen.algorithm_buttons:
+                if button.rect.collidepoint(mouse_pos):
                     app.load_algorithm(name)  # Load the selected algorithm in MAPApp
-                    app.run_selected_algorithm() # Transition to execution screen
+                    app.run_selected_algorithm()  # Transition to execution screen
 
     @staticmethod
     def update(app):
         mouse_pos = pygame.mouse.get_pos()
-        for name, rect in app.algorithm_selection_screen.algorithm_buttons:
-            if rect.collidepoint(mouse_pos):
+        for button in app.algorithm_selection_screen.algorithm_buttons:
+            name, button = button
+            if button.rect.collidepoint(mouse_pos):
                 app.algorithm_selection_screen.hovered_button = name
+                button.update(mouse_pos)
                 break
             else:
                 app.algorithm_selection_screen.hovered_button = None
@@ -38,9 +42,9 @@ class AlgorithmSelectionScreen:
         app.screen.fill((230, 230, 230))  # Light gray background
         font = pygame.font.Font(None, 36)
         button_y_start = 100
-        button_height = 40
+        button_height = 50
         button_spacing = 10
-        button_width = 200
+        button_width = 300
 
         # Title
         title_text = font.render("Select Motion Planning Algorithm", True, (0, 0, 0))
@@ -51,21 +55,21 @@ class AlgorithmSelectionScreen:
         available_algorithms = AlgorithmSelectionScreen.get_available_algorithms()
         app.algorithm_selection_screen.algorithm_buttons = []
         for i, algo_name in enumerate(available_algorithms):
-            button_rect = pygame.Rect(
+            button_rect = Button(
                 app.screen_width // 2 - button_width // 2,
                 button_y_start + i * (button_height + button_spacing),
                 button_width,
                 button_height,
+                algo_name.replace("_", " ").title(),
+                action=lambda: app.load_algorithm(algo_name)
             )
+
             app.algorithm_selection_screen.algorithm_buttons.append((algo_name, button_rect))
+            button_rect.draw(app.screen)
 
-            is_hovered = app.algorithm_selection_screen.hovered_button == algo_name
-            button_color = AlgorithmSelectionScreen.BUTTON_HOVER_COLOR if is_hovered else AlgorithmSelectionScreen.BUTTON_COLOR
-            pygame.draw.rect(app.screen, button_color, button_rect)
-
-            text_color = AlgorithmSelectionScreen.TEXT_COLOR
+            text_color = TEXT_COLOR
             text = font.render(algo_name.replace("_", " ").title(), True, text_color)
-            text_rect = text.get_rect(center=button_rect.center)
+            text_rect = text.get_rect(center=button_rect.rect.center)
             app.screen.blit(text, text_rect)
 
         # Instructions
