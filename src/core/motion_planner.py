@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
+
 from src.core.environment import Environment
+
 
 class MotionPlanner(ABC):
     @abstractmethod
-    def plan(self, environment: Environment):
+    def plan(self, environment: Environment) -> (list, int):
         """
         Plans a path from the start to the goal in the given environment.
 

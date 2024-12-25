@@ -1,6 +1,8 @@
 import random
-from src.core.motion_planner import MotionPlanner
+
 from src.core.environment import Environment
+from src.core.motion_planner import MotionPlanner
+
 
 class RandomWalkPlanner(MotionPlanner):
     def __init__(self, sensor=None):
@@ -15,9 +17,9 @@ class RandomWalkPlanner(MotionPlanner):
         path = [current]
         max_steps = 1000
 
-        for _ in range(max_steps):
+        for i in range(max_steps):
             if current == environment.goal:
-                yield path  # Yield the final path when goal is reached
+                yield path, i  # Yield the final path when goal is reached
                 return
 
             neighbors = [(current[0] + dx, current[1] + dy) for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]]
@@ -30,10 +32,10 @@ class RandomWalkPlanner(MotionPlanner):
                 valid_neighbors = [n for n in valid_neighbors if n not in sensor_data["obstacles_in_range"]]
 
             if not valid_neighbors:
-                yield path  # Yield path so far (stuck)
+                yield path, i  # Yield path so far (stuck)
                 return
 
             current = random.choice(valid_neighbors)
             path.append(current)
 
-            yield path  # Yield the current path after each step
+            yield path, i  # Yield the current path after each step

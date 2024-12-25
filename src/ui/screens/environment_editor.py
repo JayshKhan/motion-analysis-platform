@@ -1,7 +1,11 @@
-import pygame
+import json
+import random
+import time
 import tkinter as tk
 from tkinter import filedialog
-import json
+
+import pygame
+
 
 class EnvironmentEditorScreen:
     GRID_COLOR = (200, 200, 200)
@@ -11,7 +15,7 @@ class EnvironmentEditorScreen:
 
     def __init__(self):
         self.cell_size = 20
-        self.drawing_obstacle = False
+        self.drawing_obstacle = True
         self.erasing_obstacle = False
 
     @staticmethod
@@ -30,6 +34,9 @@ class EnvironmentEditorScreen:
                 EnvironmentEditorScreen.save_environment(app)
             elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 EnvironmentEditorScreen.load_environment(app)
+            elif event.key == pygame.K_r and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                EnvironmentEditorScreen.generate_random_maze(app)
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             grid_x = mouse_pos[0] // EnvironmentEditorScreen.get_cell_size()
@@ -83,14 +90,16 @@ class EnvironmentEditorScreen:
         font = pygame.font.Font(None, 24)
         instructions = [
             "Press ESC to Main Menu",
+            "Press 'C' to clear environment",
             "Press 'O' to draw obstacles",
             "Press 'E' to erase obstacles",
             "Ctrl+S to Save Environment",
-            "Ctrl+L to Load Environment"
+            "Ctrl+L to Load Environment",
+            "Ctrl+R to Generate Random Maze",
         ]
         y_offset = 10
         for line in instructions:
-            text = font.render(line, True, (0, 0, 0))
+            text = font.render(line, True, (150, 0, 150))
             app.screen.blit(text, (10, y_offset))
             y_offset += 20
 
@@ -111,6 +120,7 @@ class EnvironmentEditorScreen:
         app.environment.obstacles = set()
         app.environment.start = None
         app.environment.goal = None
+        app.environment.add_boundary()
 
     @staticmethod
     def save_environment(app):
@@ -149,3 +159,36 @@ class EnvironmentEditorScreen:
                 print(f"Environment loaded from {file_path}")
             except Exception as e:
                 print(f"Error loading environment: {e}")
+
+    @staticmethod
+    def generate_random_maze(app, density=0.3, animate=False):
+        """
+        Generates a random maze or obstacle layout based on the given density.
+
+        Parameters:
+            app: The main app instance.
+            density (float): The proportion of the grid to fill with obstacles (0 to 1).
+            animate (bool): Whether to animate the maze generation process.
+        """
+        if not (0 <= density <= 1):
+            print("Density must be between 0 and 1.")
+            return
+
+        app.environment.obstacles = set()
+
+        cells = [(x, y) for x in range(app.environment.width) for y in range(app.environment.height)]
+        random.shuffle(cells)
+
+        for x, y in cells:
+            if random.random() < density:
+                # Avoid placing obstacles at start and goal positions
+                if (x, y) != app.environment.start and (x, y) != app.environment.goal:
+                    app.environment.obstacles.add((x, y))
+
+                    if animate:
+                        EnvironmentEditorScreen.draw(app)
+                        pygame.display.flip()
+                        time.sleep(0.001)  # Adjust delay for speed of animation
+
+        app.environment.add_boundary()
+        print(f"Random maze generated with density {density}.")

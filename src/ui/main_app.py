@@ -17,12 +17,12 @@ class MAPApp:
     def __init__(self):
         pygame.init()
         self.screen_width = SCREENWIDTH
-        self.screen_height = SCREENHEIGHT
+        self.screen_height = SCREENHEIGHT + 40
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption(TITLE_TEXT)
         self.clock = pygame.time.Clock()
         self.current_screen = "main_menu"
-        self.environment = Environment(40, 30)  # Adjusted grid size
+        self.environment = Environment(int(SCREENWIDTH / 20), int(SCREENHEIGHT / 20))  # Adjusted grid size
         self.selected_algorithm_name = None
         self.imported_sensor_module = None
         self.selected_sensor = None

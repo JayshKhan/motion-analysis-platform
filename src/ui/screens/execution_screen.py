@@ -5,7 +5,7 @@ import pygame
 from src.core import algorithms
 from src.ui.assets import Button
 from src.ui.config import GRID_COLOR, OBSTACLE_COLOR, START_COLOR, GOAL_COLOR, PATH_COLOR, EXPLORED_COLOR, \
-    SENSOR_RANGE_COLOR, COLLISION_COLOR
+    SENSOR_RANGE_COLOR, COLLISION_COLOR, SCREENHEIGHT
 
 
 # from pygame.examples.go_over_there import reset
@@ -17,14 +17,16 @@ class ExecutionScreen:
         self.start_pos = None
         self.goal_pos = None
         self.path = None
+        self.step = 0
         self.run_button_rect = None
         self.run_button_hovered = False
         self.reset_button_rect = None
         self.algorithm_generator = None  # Store the algorithm generator
-        self.animation_speed = 0.05  # Adjust for visualization speed
+        self.animation_speed = 0.005  # Adjust for visualization speed
         self.last_update_time = 0
         self.explored_cells = []
         self.nodes = []  # Initialize nodes here
+        self.grid_data = []  # Initialize grid data here
 
     def reset(self):
         self.start_pos = None
@@ -32,6 +34,7 @@ class ExecutionScreen:
         self.path = None
         self.algorithm_generator = None
         self.explored_cells = []
+        self.grid_data = []
 
 
     @staticmethod
@@ -60,16 +63,32 @@ class ExecutionScreen:
         if app.execution_screen.algorithm_generator:
             current_time = time.time()
             if current_time - app.execution_screen.last_update_time > app.execution_screen.animation_speed:
-                try:
-                    result = next(app.execution_screen.algorithm_generator)
+                if app.selected_algorithm_name.startswith("Brushfire"):
+                    try:
+                        path, app.execution_screen.step, grid_data = next(app.execution_screen.algorithm_generator)
 
-                    app.execution_screen.path = result
-                    app.execution_screen.explored_cells.extend(app.execution_screen.path)
-                    # Remove duplicates
-                    app.execution_screen.explored_cells = list(set(app.execution_screen.explored_cells))
-                    app.execution_screen.last_update_time = current_time
-                except StopIteration:
-                    app.execution_screen.algorithm_generator = None  # Algorithm finished
+                        app.execution_screen.grid_data = grid_data
+                        app.execution_screen.path = path
+                        app.execution_screen.explored_cells.extend(app.execution_screen.path)
+                        # Remove duplicates
+                        app.execution_screen.explored_cells = list(set(app.execution_screen.explored_cells))
+                        app.execution_screen.last_update_time = current_time
+
+                    except StopIteration:
+                        app.execution_screen.algorithm_generator = None  # Algorithm finished
+
+                else:
+                    try:
+                        result, app.execution_screen.step = next(app.execution_screen.algorithm_generator)
+
+                        app.execution_screen.path = result
+                        app.execution_screen.explored_cells.extend(app.execution_screen.path)
+                        # Remove duplicates
+                        app.execution_screen.explored_cells = list(set(app.execution_screen.explored_cells))
+                        app.execution_screen.last_update_time = current_time
+                    except StopIteration:
+                        print("ALgorithm Finished")
+                        app.execution_screen.algorithm_generator = None  # Algorithm finished
 
     @staticmethod
     def draw(app):
@@ -92,6 +111,7 @@ class ExecutionScreen:
             rect = pygame.Rect(explored_x * cell_size, explored_y * cell_size, cell_size, cell_size)
             pygame.draw.rect(app.screen, EXPLORED_COLOR, rect)
 
+
         # Draw Start and Goal
         if app.execution_screen.start_pos:
             start_rect = pygame.Rect(app.execution_screen.start_pos[0] * cell_size,
@@ -108,6 +128,21 @@ class ExecutionScreen:
                       app.execution_screen.path]
             if len(points) > 1:
                 pygame.draw.lines(app.screen, PATH_COLOR, False, points, 3)
+        # Draw Grid Values
+        if app.execution_screen.grid_data:
+            font = pygame.font.Font(None, 24)
+            for y, row in enumerate(app.execution_screen.grid_data):
+                for x, value in enumerate(row):
+                    text = font.render(str(value), True, (0, 0, 0))
+                    app.screen.blit(text, (x * cell_size + 5, y * cell_size + 5))
+
+        # Draw Step Counter
+        font = pygame.font.Font(None, 24)
+        text = font.render(f"Step: {app.execution_screen.step}", True, (0, 0, 0))
+        app.screen.blit(text, (10, SCREENHEIGHT))
+        # Draw Explore Counter
+        text = font.render(f"Explored Cells: {len(app.execution_screen.explored_cells)}", True, (0, 0, 0))
+        app.screen.blit(text, (100, SCREENHEIGHT))
 
 
 
