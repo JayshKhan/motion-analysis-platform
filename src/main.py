@@ -1,7 +1,9 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+sys.path.append(path)
+print(f"Added {path} to sys.path")
 
 from src.ui.main_app import MAPApp
 
