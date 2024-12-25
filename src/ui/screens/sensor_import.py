@@ -156,8 +156,8 @@ class SensorImportScreen:
         """Loads available sensor modules from the sensors directory."""
         available_sensors = []
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        src_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_dir))) + "\src"
-        sensors_dir = os.path.join(src_dir, "core", "sensors", "example_sensors")
+        src_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
+        sensors_dir = os.path.join(src_dir, "src","core", "sensors", "example_sensors")
 
         for filename in os.listdir(sensors_dir):
             if filename.endswith(
