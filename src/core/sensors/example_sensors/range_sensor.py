@@ -11,3 +11,12 @@ class RangeSensor(SensorModel):
             if distance <= self.range_limit:
                 detected_obstacles.append((obs_x, obs_y))
         return {"obstacles_in_range": detected_obstacles}
+
+    def __str__(self):
+        return f"RangeSensor(range_limit={self.range_limit})"
+
+    def __repr__(self):
+        return str(self)
+
+    def __eq__(self, other):
+        return self.range_limit == other.range_limit

@@ -5,7 +5,7 @@ import pygame
 from src.core import algorithms
 from src.ui.assets import Button
 from src.ui.config import GRID_COLOR, OBSTACLE_COLOR, START_COLOR, GOAL_COLOR, PATH_COLOR, EXPLORED_COLOR, \
-    SENSOR_RANGE_COLOR
+    SENSOR_RANGE_COLOR, COLLISION_COLOR
 
 
 # from pygame.examples.go_over_there import reset
@@ -145,6 +145,9 @@ class ExecutionScreen:
             sensor_range = app.selected_sensor.range_limit  # Assuming a 'range_limit' attribute
             ExecutionScreen.draw_sensor_range(app.screen, current_position, sensor_range,
                                               app.execution_screen.cell_size)
+            ExecutionScreen.draw_sensor_output(app.screen, app.selected_sensor.sense(app.environment, current_position),
+                                               app.execution_screen.cell_size)
+
 
         # Instructions
         font = pygame.font.Font(None, 24)
@@ -176,6 +179,23 @@ class ExecutionScreen:
 
         # Blit the sensor range surface onto the main screen
         screen.blit(range_surface, (0, 0))
+
+    @staticmethod
+    def draw_sensor_output(screen, sensor_output, cell_size):
+        for sensor_name, sensor_data in sensor_output.items():
+            if sensor_name == "obstacles_in_range":
+                for obstacle_pos in sensor_data:
+                    rect = pygame.Rect(obstacle_pos[0] * cell_size, obstacle_pos[1] * cell_size, cell_size, cell_size)
+                    pygame.draw.rect(screen, COLLISION_COLOR, rect)
+
+                    # on top right corner of screen
+                    font = pygame.font.Font(None, 24)
+                    text = font.render("Collision Ahead", True, (200, 0, 0))
+                    screen.blit(text, (screen.get_width() - 150, 10))
+
+
+
+
 
     @staticmethod
     def get_cell_size():
