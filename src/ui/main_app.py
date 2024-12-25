@@ -1,3 +1,5 @@
+import inspect
+
 import pygame
 
 from src.core import sensors
@@ -138,8 +140,4 @@ class MAPApp:
         self.execution_screen.reset()  # Reset execution screen state
 
 
-if __name__ == "__main__":
-    import inspect
 
-    app = MAPApp()
-    app.run()
