@@ -28,9 +28,14 @@ class MainMenuScreen:
         app.screen.fill((240, 240, 240))  # Light gray background
         font_title = pygame.font.Font(None, 64)
         font_button = pygame.font.Font(None, 36)
+
         BackGround = Background('../assets/background.jpg', [0, 0])
         app.screen.fill([255, 255, 255])
         app.screen.blit(BackGround.image, BackGround.rect)
+
+        logo = pygame.image.load('../assets/logo.png')
+        logo = pygame.transform.scale(logo, (300, 300))
+        app.screen.blit(logo, (0, app.screen_height - 200))
 
         # Title
         title_text = font_title.render("Motion Analysis Platform", True, TITLE_COLOR)

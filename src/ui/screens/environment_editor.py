@@ -97,10 +97,10 @@ class EnvironmentEditorScreen:
             "Ctrl+L to Load Environment",
             "Ctrl+R to Generate Random Maze",
         ]
-        y_offset = 10
+        y_offset = 20
         for line in instructions:
             text = font.render(line, True, (150, 0, 150))
-            app.screen.blit(text, (10, y_offset))
+            app.screen.blit(text, (20, y_offset))
             y_offset += 20
 
     @staticmethod
