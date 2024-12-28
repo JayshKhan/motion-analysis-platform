@@ -2,10 +2,10 @@ import inspect
 
 import pygame
 
+from src.config import config_instance as CONFIG
 from src.core import sensors
 from src.core.environment import Environment
 from src.ui.assets import Button
-from src.ui.config import SCREENWIDTH, SCREENHEIGHT, TITLE_TEXT
 from src.ui.screens.algorithm_selection import AlgorithmSelectionScreen
 from src.ui.screens.environment_editor import EnvironmentEditorScreen
 from src.ui.screens.execution_screen import ExecutionScreen  # Import the new screen
@@ -16,13 +16,14 @@ from src.ui.screens.sensor_import import SensorImportScreen
 class MAPApp:
     def __init__(self):
         pygame.init()
-        self.screen_width = SCREENWIDTH
-        self.screen_height = SCREENHEIGHT + 40
+        self.screen_width = CONFIG.screen_width
+        self.screen_height = CONFIG.screen_height
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        pygame.display.set_caption(TITLE_TEXT)
+        pygame.display.set_caption(CONFIG.title_text)
         self.clock = pygame.time.Clock()
         self.current_screen = "main_menu"
-        self.environment = Environment(int(SCREENWIDTH / 20), int(SCREENHEIGHT / 20))  # Adjusted grid size
+        self.environment = Environment(int(CONFIG.screen_width / 20),
+                                       int(CONFIG.screen_height / 20))  # Adjusted grid size
         self.selected_algorithm_name = None
         self.imported_sensor_module = None
         self.selected_sensor = None

@@ -1,6 +1,6 @@
 import pygame
 
-from src.ui.config import BUTTON_HOVER_COLOR, BUTTON_COLOR, TEXT_COLOR
+from src.config import config_instance as CONFIG
 
 
 class Background(pygame.sprite.Sprite):
@@ -18,7 +18,8 @@ class Button:
     """
 
     def __init__(self, x, y, width, height, text, font_size=36,
-                 normal_color=BUTTON_COLOR, hover_color=BUTTON_HOVER_COLOR, text_color=TEXT_COLOR, action=None):
+                 normal_color=CONFIG.button_color, hover_color=CONFIG.button_hover_color, text_color=CONFIG.text_color,
+                 action=None):
         """
         Initializes the button.
 

@@ -1,4 +1,4 @@
-from src.ui.config import DEBUG
+from src.config import config_instance as CONFIG
 
 
 class Environment:
@@ -23,10 +23,10 @@ class Environment:
         return 0 <= x < self.width and 0 <= y < self.height and (x, y) not in self.obstacles
 
     def add_boundary(self):
-        print("Adding boundary") if DEBUG else None
+        print("Adding boundary") if CONFIG.debug else None
         for i in range(self.width):
             self.obstacles.add((i, 0))
-            self.obstacles.add((i, self.height - 1))
-        for i in range(self.height):
+            self.obstacles.add((i, self.height - 3))
+        for i in range(self.height - 3):
             self.obstacles.add((0, i))
             self.obstacles.add((self.width - 1, i))

@@ -2,9 +2,9 @@ import inspect
 
 import pygame
 
+from src.config import config_instance as CONFIG
 from src.core import algorithms
 from src.ui.assets import Button
-from src.ui.config import TEXT_COLOR
 
 
 class AlgorithmSelectionScreen:
@@ -67,7 +67,7 @@ class AlgorithmSelectionScreen:
             app.algorithm_selection_screen.algorithm_buttons.append((algo_name, button_rect))
             button_rect.draw(app.screen)
 
-            text_color = TEXT_COLOR
+            text_color = CONFIG.text_color
             text = font.render(algo_name.replace("_", " ").title(), True, text_color)
             text_rect = text.get_rect(center=button_rect.rect.center)
             app.screen.blit(text, text_rect)

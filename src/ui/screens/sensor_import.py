@@ -8,9 +8,9 @@ from tkinter import filedialog
 
 import pygame
 
+from src.config import config_instance as CONFIG
 from src.core.sensors.sensor_model import SensorModel
 from src.ui.assets import Button
-from src.ui.config import INFO_TEXT_COLOR, SCREENWIDTH, TEXT_COLOR
 
 
 class SensorImportScreen:
@@ -51,7 +51,7 @@ class SensorImportScreen:
         button_width = 300
 
         # Title
-        title_text = font.render("Import Custom Sensor Model", True, INFO_TEXT_COLOR)
+        title_text = font.render("Import Custom Sensor Model", True, CONFIG.info_text_color)
         title_rect = title_text.get_rect(center=(app.screen_width // 2, 100))
         app.screen.blit(title_text, title_rect)
 
@@ -72,7 +72,7 @@ class SensorImportScreen:
             app.sensor_import_screen.sensor_buttons.append((module_name, button_rect))
             button_rect.draw(app.screen)
 
-            text_color = TEXT_COLOR
+            text_color = CONFIG.text_color
             text = font.render(module_name.replace("_", " ").title(), True, text_color)
             text_rect = text.get_rect(center=button_rect.rect.center)
             app.screen.blit(text, text_rect)
@@ -80,7 +80,7 @@ class SensorImportScreen:
         # Import Button
         button_width = 200
         button_height = 40
-        button_x = SCREENWIDTH // 2 - button_width // 2
+        button_x = CONFIG.screen_width // 2 - button_width // 2
         button_y = 200
 
         app.sensor_import_screen.import_button_rect = Button(
@@ -102,7 +102,7 @@ class SensorImportScreen:
         ]
         y_offset = 300
         for line in instructions:
-            text = small_font.render(line, True, INFO_TEXT_COLOR)
+            text = small_font.render(line, True, CONFIG.info_text_color)
             text_rect = text.get_rect(center=(app.screen_width // 2, y_offset))
             app.screen.blit(text, text_rect)
             y_offset += 30

@@ -2,10 +2,9 @@ import time
 
 import pygame
 
+from src.config import config_instance as CONFIG
 from src.core import algorithms
 from src.ui.assets import Button
-from src.ui.config import GRID_COLOR, OBSTACLE_COLOR, START_COLOR, GOAL_COLOR, PATH_COLOR, EXPLORED_COLOR, \
-    SENSOR_RANGE_COLOR, COLLISION_COLOR, SCREENHEIGHT
 
 
 # from pygame.examples.go_over_there import reset
@@ -97,37 +96,37 @@ class ExecutionScreen:
 
         # Draw Grid
         for x in range(0, app.screen_width, cell_size):
-            pygame.draw.line(app.screen, GRID_COLOR, (x, 0), (x, app.screen_height))
+            pygame.draw.line(app.screen, CONFIG.grid_color, (x, 0), (x, app.screen_height))
         for y in range(0, app.screen_height, cell_size):
-            pygame.draw.line(app.screen, GRID_COLOR, (0, y), (app.screen_width, y))
+            pygame.draw.line(app.screen, CONFIG.grid_color, (0, y), (app.screen_width, y))
 
         # Draw Obstacles
         for obs_x, obs_y in app.environment.obstacles:
             rect = pygame.Rect(obs_x * cell_size, obs_y * cell_size, cell_size, cell_size)
-            pygame.draw.rect(app.screen, OBSTACLE_COLOR, rect)
+            pygame.draw.rect(app.screen, CONFIG.obstacle_color, rect)
 
         # Draw Explored Cells
         for explored_x, explored_y in app.execution_screen.explored_cells:
             rect = pygame.Rect(explored_x * cell_size, explored_y * cell_size, cell_size, cell_size)
-            pygame.draw.rect(app.screen, EXPLORED_COLOR, rect)
+            pygame.draw.rect(app.screen, CONFIG.explored_color, rect)
 
 
         # Draw Start and Goal
         if app.execution_screen.start_pos:
             start_rect = pygame.Rect(app.execution_screen.start_pos[0] * cell_size,
                                      app.execution_screen.start_pos[1] * cell_size, cell_size, cell_size)
-            pygame.draw.rect(app.screen, START_COLOR, start_rect)
+            pygame.draw.rect(app.screen, CONFIG.start_color, start_rect)
         if app.execution_screen.goal_pos:
             goal_rect = pygame.Rect(app.execution_screen.goal_pos[0] * cell_size,
                                     app.execution_screen.goal_pos[1] * cell_size, cell_size, cell_size)
-            pygame.draw.rect(app.screen, GOAL_COLOR, goal_rect)
+            pygame.draw.rect(app.screen, CONFIG.goal_color, goal_rect)
 
         # Draw Path
         if app.execution_screen.path:
             points = [(x * cell_size + cell_size // 2, y * cell_size + cell_size // 2) for x, y in
                       app.execution_screen.path]
             if len(points) > 1:
-                pygame.draw.lines(app.screen, PATH_COLOR, False, points, 3)
+                pygame.draw.lines(app.screen, CONFIG.path_color, False, points, 3)
         # Draw Grid Values
         if app.execution_screen.grid_data:
             font = pygame.font.Font(None, 24)
@@ -139,10 +138,10 @@ class ExecutionScreen:
         # Draw Step Counter
         font = pygame.font.Font(None, 24)
         text = font.render(f"Step: {app.execution_screen.step}", True, (0, 0, 0))
-        app.screen.blit(text, (10, SCREENHEIGHT))
+        app.screen.blit(text, (10, CONFIG.screen_height))
         # Draw Explore Counter
         text = font.render(f"Explored Cells: {len(app.execution_screen.explored_cells)}", True, (0, 0, 0))
-        app.screen.blit(text, (100, SCREENHEIGHT))
+        app.screen.blit(text, (100, CONFIG.screen_height))
 
 
 
@@ -209,7 +208,7 @@ class ExecutionScreen:
         center_y = int(position[1] * cell_size + cell_size / 2)
 
         # Draw a circle to represent the sensor's range
-        pygame.draw.circle(range_surface, SENSOR_RANGE_COLOR, (center_x, center_y),
+        pygame.draw.circle(range_surface, CONFIG.sensor_range_color, (center_x, center_y),
                            int(range_limit * cell_size))
 
         # Blit the sensor range surface onto the main screen
@@ -221,7 +220,7 @@ class ExecutionScreen:
             if sensor_name == "obstacles_in_range":
                 for obstacle_pos in sensor_data:
                     rect = pygame.Rect(obstacle_pos[0] * cell_size, obstacle_pos[1] * cell_size, cell_size, cell_size)
-                    pygame.draw.rect(screen, COLLISION_COLOR, rect)
+                    pygame.draw.rect(screen, CONFIG.collision_color, rect)
 
                     # on top right corner of screen
                     font = pygame.font.Font(None, 24)

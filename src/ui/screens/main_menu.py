@@ -1,7 +1,7 @@
 import pygame
 
+from src.config import config_instance as CONFIG
 from src.ui.assets import Background
-from src.ui.config import *
 
 
 class MainMenuScreen:
@@ -38,7 +38,7 @@ class MainMenuScreen:
         app.screen.blit(logo, (0, app.screen_height - 200))
 
         # Title
-        title_text = font_title.render("Motion Analysis Platform", True, TITLE_COLOR)
+        title_text = font_title.render("Motion Analysis Platform", True, CONFIG.title_color)
         title_rect = title_text.get_rect(center=(app.screen_width // 2, 100))
         app.screen.blit(title_text, title_rect)
 
