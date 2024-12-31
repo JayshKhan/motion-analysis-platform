@@ -22,8 +22,8 @@ class MAPApp:
         pygame.display.set_caption(CONFIG.title_text)
         self.clock = pygame.time.Clock()
         self.current_screen = "main_menu"
-        self.environment = Environment(int(CONFIG.screen_width / 20),
-                                       int(CONFIG.screen_height / 20))  # Adjusted grid size
+        self.environment = Environment(int(CONFIG.screen_width / int(CONFIG.grid_resolution)),
+                                       int(CONFIG.screen_height / int(CONFIG.grid_resolution)))  # Adjusted grid size
         self.selected_algorithm_name = None
         self.imported_sensor_module = None
         self.selected_sensor = None

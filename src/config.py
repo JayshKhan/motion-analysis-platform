@@ -29,7 +29,7 @@ class Config:
             self.screen_width = 1000
             self.screen_height = 700
             self.grid_color = (200, 200, 200)
-            self.grid_resolution = 20
+            self.grid_resolution = 5
             self.debug = False
 
 

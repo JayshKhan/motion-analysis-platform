@@ -233,7 +233,7 @@ class ExecutionScreen:
 
     @staticmethod
     def get_cell_size():
-        return 20
+        return CONFIG.grid_resolution
 
     @staticmethod
     def run_algorithm(app):

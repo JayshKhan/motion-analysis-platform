@@ -6,6 +6,8 @@ from tkinter import filedialog
 
 import pygame
 
+from src.config import config_instance as CONFIG
+
 
 class EnvironmentEditorScreen:
     GRID_COLOR = (200, 200, 200)
@@ -105,7 +107,7 @@ class EnvironmentEditorScreen:
 
     @staticmethod
     def get_cell_size():
-        return 20
+        return CONFIG.grid_resolution
 
     def start_drawing_obstacle(self):
         self.drawing_obstacle = True
