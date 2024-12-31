@@ -11,6 +11,7 @@ from src.ui.screens.environment_editor import EnvironmentEditorScreen
 from src.ui.screens.execution_screen import ExecutionScreen  # Import the new screen
 from src.ui.screens.main_menu import MainMenuScreen
 from src.ui.screens.sensor_import import SensorImportScreen
+from src.ui.screens.settings import SettingsScreen
 
 
 class MAPApp:
@@ -61,6 +62,14 @@ class MAPApp:
             "Run Algorithm",
             action=lambda: setattr(self, "current_screen", "algorithm_selection"),
         )
+        self.settings_button_rect = Button(
+            self.screen_width // 2 - button_width // 2,
+            start_y + 3 * (button_height + button_spacing),
+            button_width,
+            button_height,
+            "Settings",
+            action=lambda: setattr(self, "current_screen", "settings"),
+        )
 
         # Initialize screens
 
@@ -68,6 +77,9 @@ class MAPApp:
         self.sensor_import_screen = SensorImportScreen()
         self.algorithm_selection_screen = AlgorithmSelectionScreen()
         self.execution_screen = ExecutionScreen()  # Initialize the execution screen
+        self.settings_screen = SettingsScreen()
+
+        self.scroll_y = 0
 
     def run(self):
         running = True
@@ -96,6 +108,8 @@ class MAPApp:
             SensorImportScreen.handle_input(self, event)
         elif self.current_screen == "execution":
             ExecutionScreen.handle_input(self, event)
+        elif self.current_screen == "settings":
+            SettingsScreen.handle_input(self, event)
 
     def update(self):
         if self.current_screen == "main_menu":
@@ -108,6 +122,8 @@ class MAPApp:
             SensorImportScreen.update(self)
         elif self.current_screen == "execution":
             ExecutionScreen.update(self)
+        elif self.current_screen == "settings":
+            SettingsScreen.update(self)
 
     def draw(self):
         if self.current_screen == "main_menu":
@@ -120,6 +136,8 @@ class MAPApp:
             SensorImportScreen.draw(self)
         elif self.current_screen == "execution":
             ExecutionScreen.draw(self)
+        elif self.current_screen == "settings":
+            SettingsScreen.draw(self)
         pygame.display.flip()
 
     def load_algorithm(self, algorithm_name):

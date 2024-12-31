@@ -46,9 +46,11 @@ class ExecutionScreen:
             grid_x = mouse_pos[0] // ExecutionScreen.get_cell_size()
             grid_y = mouse_pos[1] // ExecutionScreen.get_cell_size()
             if not app.execution_screen.start_pos:
-                app.execution_screen.start_pos = (grid_x, grid_y)
+                if (grid_x, grid_y) not in app.environment.obstacles:
+                    app.execution_screen.start_pos = (grid_x, grid_y)
             elif not app.execution_screen.goal_pos:
-                app.execution_screen.goal_pos = (grid_x, grid_y)
+                if (grid_x, grid_y) not in app.environment.obstacles:
+                    app.execution_screen.goal_pos = (grid_x, grid_y)
             elif app.execution_screen.run_button_rect and app.execution_screen.run_button_rect.rect.collidepoint(
                     mouse_pos):
                 app.execution_screen.run_button_rect.handle_event(event)

@@ -13,6 +13,7 @@ class MainMenuScreen:
             app.environment_button_rect.handle_event(event)
             app.sensor_button_rect.handle_event(event)
             app.algorithm_button_rect.handle_event(event)
+            app.settings_button_rect.handle_event(event)
 
 
     @staticmethod
@@ -21,6 +22,7 @@ class MainMenuScreen:
         app.environment_button_rect.update(mouse_pos)
         app.sensor_button_rect.update(mouse_pos)
         app.algorithm_button_rect.update(mouse_pos)
+        app.settings_button_rect.update(mouse_pos)
 
 
     @staticmethod
@@ -45,3 +47,4 @@ class MainMenuScreen:
         app.environment_button_rect.draw(app.screen)
         app.sensor_button_rect.draw(app.screen)
         app.algorithm_button_rect.draw(app.screen)
+        app.settings_button_rect.draw(app.screen)
