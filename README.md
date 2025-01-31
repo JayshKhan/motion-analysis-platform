@@ -7,7 +7,9 @@
 [![Pygame](https://img.shields.io/badge/Pygame-2.6%2B-brightgreen.svg)](https://www.pygame.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
->#### *Note : The project is currently Under Developement so the below README may not provide whole information Yet.*
+> [!NOTE]
+>  The project is currently Under Developement so the below README may not provide whole information Yet.*
+> 
 ## Welcome to the Future of Motion Planning!
 
 **M.A.P.** isn't just another motion planning framework; it's your interactive playground for exploring the fascinating world of robotics algorithms!  Dive deep into 2D environments, design challenging scenarios, and unleash the power of pathfinding with a user interface so intuitive, it feels like magic.
