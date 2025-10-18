@@ -17,8 +17,8 @@ extensions = [
     'sphinxcontrib.plantuml',
 ]
 
-# If you have plantuml installed locally, you can specify the path to the jar file
-# plantuml = 'java -jar /path/to/plantuml.jar'
+# Explicitly set the path to the plantuml executable for the GitHub Actions runner
+plantuml = '/usr/bin/plantuml'
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
