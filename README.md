@@ -88,9 +88,11 @@ This will launch the main menu, from where you can:
 
 ## Architecture
 
-Below are diagrams illustrating the architecture of the Motion Analysis Platform. You can render these diagrams using a PlantUML extension in your IDE or an online tool.
+Below are diagrams illustrating the architecture of the Motion Analysis Platform. 
 
 ### Stacked Architecture
+
+You can render this diagram using a PlantUML extension in your IDE or an online tool.
 
 ```plantuml
 @startuml
@@ -141,80 +143,11 @@ Components ..> Assets : Reads
 
 ### Class Diagram
 
-```plantuml
-@startuml
-
-!theme vibrant
-
-title Motion Analysis Platform - High-Level Class Diagram
-
-class MAPApp {
-    +screen: pygame.Surface
-    +environment: Environment
-    +current_screen: str
-    +run()
-    +handle_input()
-    +update()
-    +draw()
-}
-
-abstract class Screen {
-    {static} +handle_input(app, event)
-    {static} +update(app)
-    {static} +draw(app)
-}
-
-class MainMenuScreen extends Screen
-class EnvironmentEditorScreen extends Screen
-class AlgorithmSelectionScreen extends Screen
-class ExecutionScreen extends Screen
-
-class Environment {
-    +grid: List[List[int]]
-    +width: int
-    +height: int
-}
-
-class Button {
-    +rect: pygame.Rect
-    +text: str
-    +action: function
-    +draw(surface)
-}
-
-abstract class SensorModel {
-    +get_reading(position, env): any
-}
-
-abstract class Algorithm {
-    +run(env, start, goal): path
-}
-
-class Config {
-    {static} +_instance: Config
-    +ROOT_PATH: str
-    +screen_width: int
-    +screen_height: int
-}
-
-MAPApp o-- Environment
-MAPApp *-- MainMenuScreen
-MAPApp *-- EnvironmentEditorScreen
-MAPApp *-- AlgorithmSelectionScreen
-MAPApp *-- ExecutionScreen
-
-MAPApp ..> Config : uses
-MAPApp ..> Button : uses
-
-ExecutionScreen ..> Algorithm : uses
-ExecutionScreen ..> SensorModel : uses
-
-@enduml
-```
+A visual representation of the class diagram can be found in our full [documentation](https://yourusername.github.io/motion-analysis-platform/architecture.html).
 
 ## Documentation
 
-Detailed documentation, including a comprehensive API reference and tutorials, can be found in the `docs/` directory.
+Detailed documentation, including a comprehensive API reference and tutorials, will be hosted on GitHub Pages. Once you push to `main`, the documentation will be available at `https://yourusername.github.io/motion-analysis-platform/`.
 
 ## Contributing
 
