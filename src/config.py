@@ -1,3 +1,5 @@
+import os
+
 class Config:
     _instance = None
 
@@ -9,6 +11,8 @@ class Config:
     def __init__(self):
         if not hasattr(self, 'initialized'):  # Ensure __init__ is only called once
             self.initialized = True
+            # Project Root Path
+            self.ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
             # UI
             self.button_color = (24, 115, 119)
             self.button_hover_color = (24, 150, 119)

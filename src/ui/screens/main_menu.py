@@ -1,3 +1,4 @@
+import os
 import pygame
 
 from src.config import config_instance as CONFIG
@@ -31,11 +32,11 @@ class MainMenuScreen:
         font_title = pygame.font.Font(None, 64)
         font_button = pygame.font.Font(None, 36)
 
-        BackGround = Background('../assets/background.jpg', [0, 0])
+        BackGround = Background(os.path.join(CONFIG.ROOT_PATH, 'assets', 'background.jpg'), [0, 0])
         app.screen.fill([255, 255, 255])
         app.screen.blit(BackGround.image, BackGround.rect)
 
-        logo = pygame.image.load('../assets/logo.png')
+        logo = pygame.image.load(os.path.join(CONFIG.ROOT_PATH, 'assets', 'logo.png'))
         logo = pygame.transform.scale(logo, (300, 300))
         app.screen.blit(logo, (0, app.screen_height - 200))
 
