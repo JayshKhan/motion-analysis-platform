@@ -1,4 +1,3 @@
-
 # <img src="assets/logo.jpeg" alt="MAP Logo" width="60" height="60" align="left">  Motion Analysis Platform (M.A.P.)
 
 <br>
@@ -45,62 +44,187 @@
 | **Cross-Platform**       | Runs wherever Python and Pygame go! (Windows, macOS, Linux)                                                                                                  |
 | **Open Source (MIT)**    | Contribute, modify, and share! Let's build the future of motion planning together.                                                                        |
 
-## Installation - Let's Get This Party Started:
+## Getting Started
 
-1. **Clone the Repository:**
+### Prerequisites
 
+Make sure you have Python 3.12+ installed on your system.
+
+### Installation
+
+1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/motion_analysis_platform.git
-    cd motion_analysis_platform
+    git clone https://github.com/yourusername/motion-analysis-platform.git
+    cd motion-analysis-platform
     ```
 
-2. **Install the Dependencies:**
+2.  **Create and activate a virtual environment (recommended):**
+    ```bash
+    python -m venv venv
+    # On Windows
+    venv\Scripts\activate
+    # On macOS/Linux
+    source venv/bin/activate
+    ```
 
+3.  **Install the dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-## Usage - Unleash Your Inner Robot Master:
+## Usage
 
-1. **Launch the Main Menu:**
+To run the application, execute the following command from the project root:
 
-    ```bash
-    python examples/basic_ui_usage.py
-    ```
+```bash
+python main.py
+```
 
-2. **Explore the UI:**
-    *   **Edit Environment:** Create your own 2D world!
-    *   **Import Sensor Model:** Give your robots the gift of sight (or other senses).
-    *   **Select Algorithm:** Choose your pathfinding champion.
-    *   **Start!:** set the start and goal and watch the algorithm work its magic.
+This will launch the main menu, from where you can:
+*   **Edit Environment:** Create your own 2D world.
+*   **Import Sensor Model:** Give your robots the gift of sight (or other senses).
+*   **Select Algorithm:** Choose your pathfinding champion.
+*   **Start!:** Set the start and goal, and watch the algorithm work its magic.
 
-## Documentation - Your Guide to the Galaxy:
+## Architecture
 
-Detailed documentation, including a comprehensive API reference 
-and tutorials,
-will be in the `docs/` directory. 
+Below are diagrams illustrating the architecture of the Motion Analysis Platform. You can render these diagrams using a PlantUML extension in your IDE or an online tool.
 
-[//]: # (Build it yourself with Sphinx:)
+### Stacked Architecture
 
-[//]: # (```bash)
+```plantuml
+@startuml
 
-[//]: # (cd docs/)
+!theme vibrant
 
-[//]: # (make html)
+title Motion Analysis Platform - Stacked Architecture
 
-[//]: # (```)
+package "User Interface (UI) Layer" {
+    [Pygame Rendering Engine] as Pygame
+    [UI Screens (main_menu, editor, etc.)] as Screens
+    [UI Components (buttons, assets)] as Components
+}
 
-[//]: # (Then, open `_build/html/index.html` in your browser.)
+package "Application Logic Layer" {
+    [Main Application (MAPApp)] as App
+    [Screen Management] as ScreenManager
+}
 
-## Contributing - Join the Movement:
+package "Core Logic Layer" {
+    [Motion Planning Algorithms] as Algorithms
+    [Environment Representation] as Environment
+    [Sensor Models] as Sensors
+}
 
-I wholeheartedly welcome contributions! Whether you're a seasoned developer or a curious newcomer, your ideas and enhancements are valuable. Check out the `CONTRIBUTING.md` file for guidelines.
+package "Data & Configuration Layer" {
+    [Configuration (config.py)] as Config
+    [Asset Files (images, etc.)] as Assets
+}
 
-## License - Sharing is Caring:
+Pygame -down-> App
+Screens -down-> App
+Components -down-> Screens
+
+App -down-> ScreenManager
+ScreenManager -down-> Algorithms
+ScreenManager -down-> Environment
+ScreenManager -down-> Sensors
+
+Algorithms ..> Environment : Reads
+Sensors ..> Environment : Reads
+
+App ..> Config : Reads
+Components ..> Assets : Reads
+
+@enduml
+```
+
+### Class Diagram
+
+```plantuml
+@startuml
+
+!theme vibrant
+
+title Motion Analysis Platform - High-Level Class Diagram
+
+class MAPApp {
+    +screen: pygame.Surface
+    +environment: Environment
+    +current_screen: str
+    +run()
+    +handle_input()
+    +update()
+    +draw()
+}
+
+abstract class Screen {
+    {static} +handle_input(app, event)
+    {static} +update(app)
+    {static} +draw(app)
+}
+
+class MainMenuScreen extends Screen
+class EnvironmentEditorScreen extends Screen
+class AlgorithmSelectionScreen extends Screen
+class ExecutionScreen extends Screen
+
+class Environment {
+    +grid: List[List[int]]
+    +width: int
+    +height: int
+}
+
+class Button {
+    +rect: pygame.Rect
+    +text: str
+    +action: function
+    +draw(surface)
+}
+
+abstract class SensorModel {
+    +get_reading(position, env): any
+}
+
+abstract class Algorithm {
+    +run(env, start, goal): path
+}
+
+class Config {
+    {static} +_instance: Config
+    +ROOT_PATH: str
+    +screen_width: int
+    +screen_height: int
+}
+
+MAPApp o-- Environment
+MAPApp *-- MainMenuScreen
+MAPApp *-- EnvironmentEditorScreen
+MAPApp *-- AlgorithmSelectionScreen
+MAPApp *-- ExecutionScreen
+
+MAPApp ..> Config : uses
+MAPApp ..> Button : uses
+
+ExecutionScreen ..> Algorithm : uses
+ExecutionScreen ..> SensorModel : uses
+
+@enduml
+```
+
+## Documentation
+
+Detailed documentation, including a comprehensive API reference and tutorials, can be found in the `docs/` directory.
+
+## Contributing
+
+Contributions are welcome! Please feel free to open an issue or submit a pull request.
+
+## License
 
 M.A.P. is released under the **MIT License**. Feel free to use, modify, and distribute it as you see fit.
 
-## Acknowledgements - MAP Stand on the Shoulders of Giants:
+## Acknowledgements
 
 *   **Pygame:**  The amazing library that powers our UI.
 *   **Python:** The versatile language that makes it all possible.

@@ -1,0 +1,44 @@
+@startuml
+
+!theme vibrant
+
+title Motion Analysis Platform - Stacked Architecture
+
+package "User Interface (UI) Layer" {
+    [Pygame Rendering Engine] as Pygame
+    [UI Screens (main_menu, editor, etc.)] as Screens
+    [UI Components (buttons, assets)] as Components
+}
+
+package "Application Logic Layer" {
+    [Main Application (MAPApp)] as App
+    [Screen Management] as ScreenManager
+}
+
+package "Core Logic Layer" {
+    [Motion Planning Algorithms] as Algorithms
+    [Environment Representation] as Environment
+    [Sensor Models] as Sensors
+}
+
+package "Data & Configuration Layer" {
+    [Configuration (config.py)] as Config
+    [Asset Files (images, etc.)] as Assets
+}
+
+Pygame -down-> App
+Screens -down-> App
+Components -down-> Screens
+
+App -down-> ScreenManager
+ScreenManager -down-> Algorithms
+ScreenManager -down-> Environment
+ScreenManager -down-> Sensors
+
+Algorithms ..> Environment : Reads
+Sensors ..> Environment : Reads
+
+App ..> Config : Reads
+Components ..> Assets : Reads
+
+@enduml
